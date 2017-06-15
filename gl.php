@@ -5,6 +5,19 @@ if(isset($_POST['timm']))
 $t=$_POST['timm'];
 $j=$pdo -> query("SELECT * FROM Gomoku WHERE tim >'$t'");
 $kk=$j->rowCount();
+$id=$_POST['id'];
+$nt=time();
+$pdo->query("UPDATE guser SET tim = '$nt' WHERE id = '$id'");
+$tu=time()-120;
+$uj=$pdo -> prepare("SELECT * FROM guser WHERE tim <'$tu'");
+$uj->execute();
+$uk=$uj->rowCount();
+if($uk>0)
+{
+	echo "00";
+	//die('3');
+}else
+{
 	if($kk>0)
 	{
 		$count = $pdo->prepare("SELECT * FROM Gomoku ");   
@@ -24,6 +37,7 @@ echo $x.",".$y.",".$ii[3].",".$color;
 }else
 {
 	echo "0";
+}
 }
 }
 ?>

@@ -34,6 +34,7 @@
 include("ur.php");
 $idd=$_SESSION["id"];
 $niname=$_SESSION["user"];
+echo "<script>var id='".$idd."'</script>";
 $tt=0;
 $count = $pdo->prepare("SELECT * FROM guser");   
 $count->execute();   
@@ -89,6 +90,7 @@ echo "<div>".$_SESSION["user"]."</div>";
 		
 
 	?>
+	
 <div id="di"><h3>等待中</h3></div>
 	<script type="text/javascript">
 	var gg=new Array(361);
@@ -186,38 +188,9 @@ echo "<div>".$_SESSION["user"]."</div>";
 
 			xmlhttp.send("color="+color+"&x="+x+"&y="+y);
 };
-var tee;
-		function upd()
-		{
-			xmlhttp2=new XMLHttpRequest();
-xmlhttp2.open("POST","gl.php",true);
-xmlhttp2.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-xmlhttp2.send("timm="+tim);
-xmlhttp2.onreadystatechange=function() {
-	if(xmlhttp2.readyState<4){return;}
-	var te=xmlhttp2.responseText;
-	setTimeout(upd,2000);
-	if(te==0){return;}
-	tee=te.split(",",4);
-	//alert(tee.length);
-	var x=tee[0];
-	var y=tee[1];
-	tim=tee[2];
-	//color=tee[3];
-	//color=Math.abs(color-1);
-	//alert(tim);
-	cuu(x,y,tee[3]);
-	if(color==Math.abs(parseInt(tee[3])-1))
-	{
-	document.getElementById('di').style.display='none';
-	}
-	
-	
-}
-	
-	//alert(te);
-}
 
+var tee;
+		
 		function pp(k,c)
 		{
 			var x=Math.floor(k/19);
@@ -434,9 +407,8 @@ xmlhttp2.onreadystatechange=function() {
 			return o;
 			
 		};
-
-</script>
-<?php
+		</script>
+		<?php
 $tt=0;
 $count = $pdo->prepare("SELECT * FROM Gomoku");   
 $count->execute();   
@@ -457,6 +429,41 @@ echo "<script>cuu(".$x.",".$y.",".$color.");</script>";
 echo "<script>var tim=".$tt.";</script>";
 
 ?>
+<script type="text/javascript">
+function upd()
+		{
+			xmlhttp2=new XMLHttpRequest();
+xmlhttp2.open("POST","gl.php",true);
+xmlhttp2.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+xmlhttp2.send("timm="+tim+"&id="+id);
+xmlhttp2.onreadystatechange=function() {
+	if(xmlhttp2.readyState<4){return;}
+	var te=xmlhttp2.responseText;
+	
+	setTimeout(upd,2000);
+	if(te=="00"){alert("對面斷線");window.location.href="gd.php";};
+	if(te=="0"){return;}
+	tee=te.split(",",4);
+	//alert(tee.length);
+	var x=tee[0];
+	var y=tee[1];
+	tim=tee[2];
+	//color=tee[3];
+	//color=Math.abs(color-1);
+	//alert(tim);
+	cuu(x,y,tee[3]);
+	if(color==Math.abs(parseInt(tee[3])-1))
+	{
+	document.getElementById('di').style.display='none';
+	}
+	
+	
+}
+	
+	//alert(te);
+};
+</script>
+
 
 </body>
 </html>
