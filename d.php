@@ -1,7 +1,6 @@
-<?php header("location:default.php")?>
+<?php header("location:index.php")?>
 <?php
 include("ur.php");
-mysql_query("SET NAMES utf8");
-mysql_query("DELETE FROM mess")
+$pdo -> query("DELETE FROM mess")
 
 ?>

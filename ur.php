@@ -1,6 +1,7 @@
 <?php
 session_start();
-$f1=mysql_connect("mysql1.000webhost.com","a1421902_Crim","lf2.net.lon");
-mysql_select_db("a1421902_117");
-mysql_query("SET NAMES utf8");
+$pdo= new PDO("mysql:host=localhost;dbname=id1587046_crim117","id1587046_st96122","Lon86117");
+$pdo ->query("SET names utf8");
+//$pdo ->query("SET wait_timeout = 1200");
+
 ?>
