@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+	<title></title>
+</head>
+<body >
+<div><input type="file" id="ff" onchange="imm()"></div>
+<div><canvas id="canvas" width="600" height="600"></canvas></div>
+
+<script type="text/javascript">
+	var pp=new Array();
+	function draw() {
+      var canvas = document.getElementById("canvas");
+      if (canvas.getContext) {
+        var ctx = canvas.getContext("2d");
+
+        ctx.fillStyle = "rgb(200,0,0)";
+        ctx.fillRect (10, 10, 55, 50);
+
+        ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+        ctx.fillRect (30, 30, 55, 50);
+      }
+    };
+    function imm()
+    {
+    	
+    	var selectedFile = document.getElementById('ff').files[0];
+    	var canvas = document.getElementById("canvas");
+    	if (canvas.getContext) {
+    	var ctx = canvas.getContext("2d");
+    	var read=new FileReader;
+    	var img=new Image();
+    	read.addEventListener("load", function () {img.src = read.result;}, false);
+    	//img.src=selectedFile.file;
+    	read.readAsDataURL(selectedFile);
+    	img.onload=function(){
+    		ctx.fillStyle="#FFFFFF";
+    		ctx.fillRect(0,0,600,600);
+    		if(img.width>=img.height)
+    		{
+    			ctx.scale(600/img.width,600/img.width);
+    			ctx.drawImage(img,0,0);
+    			ctx.scale(img.width/600,img.width/600);
+    		}else{
+    			ctx.scale(600/img.height,600/img.height);
+    			ctx.drawImage(img,0,0);
+    			ctx.scale(img.height/600,img.height/600);
+    		}
+    		var imd=ctx.getImageData(0,0,canvas.width,canvas.height);
+    		for (var i=0;i<imd.data.length;i+=4)
+  			{
+  				var r=imd.data[i];
+  				var g=imd.data[i+1];
+  				var b=imd.data[i+2];
+  				var gr=parseInt(r*30+g*59+b*11+50)/100;
+  				imd.data[i]=gr;
+  				imd.data[i+1]=gr;
+  				imd.data[i+2]=gr;
+  				pp[gr]++;
+ 			 }
+ 			 for(var i=0;i<=255;i++)
+ 			 {
+ 			 	pp[i]=pp[i]/120000;
+ 			 }
+			ctx.putImageData(imd,0,0);
+
+    	
+    	}
+    	//alert("aaa");
+    }
+    }
+    function uu(i,j)
+    {
+    	var a1,a2;
+        for(var k=i;k<=j;k++)
+        {
+            a1 += pp[k] * k;
+            a2 += pp[k];
+        }
+        var kkk=a1/a2;
+       return kkk;
+    }
+    function oo(i,j,u)
+    {
+    	var a=0;
+        for(var k=i;k<=j;k++)
+        {
+           a += ((u - k) ^ 2) * pp[k];
+        }
+        return a;
+    }
+
+
+
+
+
+
+    /*Public Class Form1
+    Dim pp(255) As Double
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim aa As Bitmap
+        Dim ggx, ggy, gg As Double
+        Dim tt As Integer = 0
+        Dim ans As Double = Double.MaxValue
+        Dim tans As Integer = 0
+        aa = New Bitmap(TextBox1.Text)
+        Dim max As Integer = aa.Width * aa.Height
+        Dim g(aa.Width, aa.Height) As Double
+        Dim u1, u2, o1, o2 As Double
+        For i As Integer = 0 To aa.Width - 1
+            For j As Integer = 0 To aa.Height - 1
+                g(i, j) = (aa.GetPixel(i, j).R * 30 + aa.GetPixel(i, j).G * 59 + aa.GetPixel(i, j).B * 11 + 50) \ 100
+                'g = g / 3
+                aa.SetPixel(i, j, Color.FromArgb(255, g(i, j), g(i, j), g(i, j)))
+                pp(aa.GetPixel(i, j).R) += 1
+            Next
+        Next
+
+        For i As Integer = 0 To 255
+            pp(i) /= aa.Width * aa.Height
+        Next
+        For i As Integer = 0 To 255
+            u1 = uu(0, i)
+            u2 = uu(i + 1, 255)
+            o1 = oo(0, i, u1)
+            o2 = oo(i + 1, 255, u2)
+            If ans > (o1 + o2) Then
+                ans = o1 + o2
+                tans = i
+            End If
+        Next
+
+        For i As Integer = 0 To aa.Width - 1
+            For j As Integer = 0 To aa.Height - 1
+                Try
+                    ggx = (g(i - 1, j + 1) + 2 * g(i, j + 1) + g(i + 1, j + 1)) - (g(i - 1, j - 1) + 2 * g(i, j - 1) + g(i + 1, j - 1))
+                    ggy = (g(i + 1, j - 1) + 2 * g(i + 1, j) + g(i + 1, j - 1)) - (g(i - 1, j - 1) + 2 * g(i - 1, j) + g(i - 1, j - 1))
+                    gg = (ggx ^ 2 + ggy ^ 2) ^ 0.5
+                    If tans > gg Then
+                        aa.SetPixel(i, j, Color.White)
+                    Else
+                        aa.SetPixel(i, j, Color.Black)
+                    End If
+                Catch ex As Exception
+
+                End Try
+            Next
+        Next
+
+        'PictureBox1.Width = aa.Width
+        'PictureBox1.Height = aa.Height
+        PictureBox1.Image = aa
+    End Sub
+    Public Function uu(ByVal i As Integer, ByVal j As Integer)
+        Dim a1, a2 As Double
+        For k As Integer = i To j
+            a1 += pp(k) * k
+            a2 += pp(k)
+        Next
+        Return a1 / a2
+    End Function
+    Public Function oo(ByVal i As Integer, ByVal j As Integer, ByVal u As Double)
+        Dim a As Double = 0
+        For k As Integer = i To j
+            a += ((u - k) ^ 2) * pp(k)
+        Next
+        Return a
+    End Function
+End Class
+*/
+</script>
+</body>
+</html>
