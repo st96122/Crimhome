@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-	<title></title>
+	<title>五子棋</title>
 	<style type="text/css">
 		.b
 		{
@@ -28,10 +28,15 @@
 <body onload="upd()">
 <script type="text/javascript">
 	var blok=0;
-	var color=1;
+	var color=3;
 </script>
 <?php
 include("ur.php");
+if($_SESSION["user"]=="")
+{
+	echo "請登入<meta http-equiv=REFRESH CONTENT=1;url=login.html>";
+	die();
+}
 $idd=$_SESSION["id"];
 $niname=$_SESSION["user"];
 echo "<script>var id='".$idd."'</script>";
@@ -52,15 +57,31 @@ echo "<script> color=0</script>";
 		$sql="INSERT INTO guser (id,user,tim,col) VALUES ('$idd','$niname','$timee','1')";
 $pdo -> query($sql);
 echo "<script> color=1</script>";
+$count = $pdo->prepare("SELECT * FROM Gomoku");   
+$count->execute();   
+$fh=$count->rowCount(); 
+		if($fh==0)
+		{
+			echo "<script>blok=1;</script>";
+		}
 	}elseif ($f==1) {
 		$idc=$cou->fetch();
-		echo "<script> color=".$idc[3]."</script>";
+
+		echo "<script> color=".$idc[3].";</script>";
+		$cor=$pdo->query("SELECT * FROM Gomoku ORDER BY tim DESC LIMIT 1");
+		$cob=$cor->fetch();
+				if($cob[0]==$idc[3])
+		{
+			echo "<script>blok=1;</script>";
+			echo "<script>document.title='五子棋(等待對手)';</script>";
+		}
 	}
 	else
 	{
-		echo "<cript>blok=1;</script>";
+		echo "<script>blok=1;</script>";
+		echo "<script>document.title='五子棋(觀戰)';</script>";
 	}
-echo "<div>".$_SESSION["user"]."</div>";
+//echo "<div>".$_SESSION["user"]."</div>";
 //echo "<div>".$_SESSION["id"]."</div>";
 ?>
 <div style='background-image: url("/CP.jpg"); width: 600px; height: 600px; background-size: 600px 600px;position: relative;left: 400px;'>
@@ -91,9 +112,13 @@ echo "<div>".$_SESSION["user"]."</div>";
 
 	?>
 	
-<div id="di"><h3>等待中</h3></div>
+<div id="di"></div>
 	<script type="text/javascript">
 	var gg=new Array(361);
+	if(blok==1)
+	{
+		document.getElementById('di').style.display='block';
+	}
 	for(var i=0;i<gg.length;i++)
 	{
 		gg[i]=2;
@@ -122,10 +147,11 @@ echo "<div>".$_SESSION["user"]."</div>";
 				document.getElementById(x+y).style.backgroundSize="14px 16px";*/
 				document.getElementById(x+y).className="b";
 				document.getElementById('di').style.display='block';
+				document.title='五子棋(等待對手)';
 				subm(x,y);
 				}
 			}
-			else
+			else if(color==1)
 			{
 				if(document.getElementById(x+y).className=="c")
 				{
@@ -133,6 +159,7 @@ echo "<div>".$_SESSION["user"]."</div>";
 				document.getElementById(x+y).style.backgroundSize="14px 16px";*/
 				document.getElementById(x+y).className="w";
 				document.getElementById('di').style.display='block';
+				document.title='五子棋(等待對手)';
 				subm(x,y);
 				}
 			}
@@ -187,6 +214,10 @@ echo "<div>".$_SESSION["user"]."</div>";
 			xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 
 			xmlhttp.send("color="+color+"&x="+x+"&y="+y);
+			xmlhttp.onreadystatechange=function() {
+	if(xmlhttp.readyState<4){return;}
+	if(xmlhttp.status!=200){subm(x,y);}
+}
 };
 
 var tee;
@@ -216,8 +247,13 @@ var tee;
 			}
 			if(po>=1)
 			{
-
-				alert(c+"贏了");
+				if(c==0)
+					{
+						alert("黑棋贏了");
+					}else
+					{
+						alert("白棋贏了");
+					}
 				window.location.href='gd.php';
 			}
 		};
@@ -433,15 +469,16 @@ echo "<script>var tim=".$tt.";</script>";
 function upd()
 		{
 			xmlhttp2=new XMLHttpRequest();
+			if(tim<0){return;}
 xmlhttp2.open("POST","gl.php",true);
 xmlhttp2.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 xmlhttp2.send("timm="+tim+"&id="+id);
 xmlhttp2.onreadystatechange=function() {
 	if(xmlhttp2.readyState<4){return;}
 	var te=xmlhttp2.responseText;
-	
+	if(xmlhttp2.status!=200){upd();return;}
 	setTimeout(upd,2000);
-	if(te=="00"){alert("對面斷線");window.location.href="gd.php";};
+	if(te=="00"){alert("對手已離開");window.location.href="gd.php";};
 	if(te=="0"){return;}
 	tee=te.split(",",4);
 	//alert(tee.length);
@@ -452,9 +489,14 @@ xmlhttp2.onreadystatechange=function() {
 	//color=Math.abs(color-1);
 	//alert(tim);
 	cuu(x,y,tee[3]);
+	ncolor=tee[3];
 	if(color==Math.abs(parseInt(tee[3])-1))
 	{
 	document.getElementById('di').style.display='none';
+	document.title='五子棋';
+	}else
+	{
+		document.getElementById('di').style.display='block';
 	}
 	
 	
@@ -462,6 +504,10 @@ xmlhttp2.onreadystatechange=function() {
 	
 	//alert(te);
 };
+function blok()
+{
+	document.getElementById('di').style.display='block';
+}
 </script>
 
 

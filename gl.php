@@ -8,7 +8,7 @@ $kk=$j->rowCount();
 $id=$_POST['id'];
 $nt=time();
 $pdo->query("UPDATE guser SET tim = '$nt' WHERE id = '$id'");
-$tu=time()-120;
+$tu=time()-30;
 $uj=$pdo -> prepare("SELECT * FROM guser WHERE tim <'$tu'");
 $uj->execute();
 $uk=$uj->rowCount();
@@ -31,7 +31,7 @@ $x=$ii[1];
 $y=$ii[2];
 //ob_flush();
 		//flush();
-echo $x.",".$y.",".$ii[3].",".$color;
+echo $x.",".$y.",".$ii[3].",".$color.",";
 
 }
 }else

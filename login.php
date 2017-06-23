@@ -13,8 +13,7 @@ $g = $pdo -> query("SELECT * FROM login WHERE user = '$u' AND password = '$p'");
 	$uu=$g -> fetch();
 	$_SESSION["user"]=$uu[3];
 	$_SESSION["id"]=$uu[0];
-	echo "成功";
-	echo "<meta http-equiv=REFRESH CONTENT=1;url=index.php>";
+	echo "<meta http-equiv=REFRESH CONTENT=0;url=index.php>";
 }else{
 	echo "失敗";
 	echo "<meta http-equiv=REFRESH CONTENT=1;url=login.html>";

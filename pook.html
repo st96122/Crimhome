@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+.b{background-color: white;height: 50px;}
+#di{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	display: none;
+}
+body{
+			background-image: url('pw9.jpg');
+			background-attachment:fixed;
+			background-repeat:no-repeat;
+			background-size:cover;
+		}
+</style>
+<meta charset="utf-8">
+	<title></title>
+	<script type="text/javascript">
+	var aa=new Array(7);
+		var rr=new Array(10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10);
+		var ab='bk.jpg';
+		var fl=10;
+		var th;
+		var thp=20;
+		var point=0;
+		aa[0]='1.gif';
+		aa[1]='2.gif';
+		aa[2]='3.gif';
+		aa[3]='4.gif';
+		aa[4]='5.gif';
+		aa[5]='6.gif';
+		aa[6]='7.gif';
+		aa[7]='8.gif';
+		//window.onmousedoun= "function()={return 0;}";
+	</script>
+</head>
+<body>
+<div id="di"></div>
+<div style="text-align:center;">
+<input type="button" class="b" id="g1" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(0)" >
+<input type="button" class="b" id="g2" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(1)" >
+<input type="button" class="b" id="g3" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(2)" >
+<input type="button" class="b" id="g4" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(3)" >
+</div>
+<div style="text-align:center;">
+<input type="button" class="b" id="g5" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(4)" >
+<input type="button" class="b" id="g6" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(5)" >
+<input type="button" class="b" id="g7" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(6)" >
+<input type="button" class="b" id="g8" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(7)" >
+</div>
+<div style="text-align:center;">
+<input type="button" class="b" id="g9" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(8)" >
+<input type="button" class="b" id="g10" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(9)" >
+<input type="button" class="b" id="g11" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(10)" >
+<input type="button" class="b" id="g12" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(11)" >
+</div>
+<div style="text-align:center;">
+<input type="button" class="b" id="g13" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(12)" >
+<input type="button" class="b" id="g14" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(13)" >
+<input type="button" class="b" id="g15" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(14)" >
+<input type="button" class="b" id="g16" style="background-image:url(bk.jpg);width: 100px;height: 150px;background-size:100px 150px;" onclick="bb(15)" >
+</div>
+
+<script type="text/javascript">
+randomn();
+//function onmousedown(){return false;}
+function randomn(){
+	var a=0;
+	var j=0;
+	var cou=new Array(0,0,0,0,0,0,0,0);
+	for (var i = 0; i < 16; i++) {
+		while(rr[i]==10)
+		{
+		a=Math.floor(Math.random()*8);
+		if(cou[a]<2)
+		{
+			cou[a]+=1;
+			rr[i]=a;
+		}
+		
+		}
+	}
+	
+}
+</script>
+<script type="text/javascript">
+function bb(b){
+	th="g"+(b+1);
+	if(thp==20)
+	{
+		thp=th;
+	}else
+	{
+		document.getElementById("di").style.display="block";
+	}
+	document.getElementById(th).style.backgroundImage="url("+aa[rr[b]]+")";
+	//document.getElementById(th).style.visibility="hidden";
+	if(fl==10)
+	{
+		fl=rr[b];
+	}else if(fl==rr[b] & th!=thp)
+	{
+		document.getElementById("di").style.display="block";
+		point++;
+		document.getElementById(th).disabled="disabled";
+		document.getElementById(thp).disabled="disabled";
+		fl=10;
+		thp=20;
+		document.getElementById("di").style.display="none";
+	}else{
+		document.getElementById("di").style.display="block";
+		/*document.getElementById(th).style.backgroundImage="url("+ab+")";
+		document.getElementById(thp).style.backgroundImage="url("+ab+")";*/
+		var hil=setTimeout(function(){fff()},1000);
+		
+	}
+	//document.getElementById("di").style.display="none";
+}
+function fff()
+{
+	document.getElementById(th).style.backgroundImage="url("+ab+")";
+	document.getElementById(thp).style.backgroundImage="url("+ab+")";
+	fl=10;
+	thp=20;
+	document.getElementById("di").style.display="none";
+}
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+</script>
+
+
+
+</body>
+</html>

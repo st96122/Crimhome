@@ -3,11 +3,20 @@
 <html>
 <head>
 <meta charset="utf-8">
-	<title></title>
+	<title>邊緣偵測</title>
 </head>
-<body >
+<body>
+<div style="text-align: right;"><input type="button" onclick="window.location.href='index.php';" value="回首頁"></div>
 <div><input type="file" id="ff" onchange="imm()"></div>
+<div style="display: inline-block;">
+<div>灰階化</div>
+<div><canvas id="canvas0" width="600" height="600"></canvas></div>
+</div>
+<div style="display: inline-block;">
+<div>邊緣偵測</div>
 <div><canvas id="canvas" width="600" height="600"></canvas></div>
+</div>
+
 
 <script type="text/javascript">
 	var pp=new Array(256);
@@ -36,8 +45,10 @@
     	var ans=9223372036854775800.000000;
     	var selectedFile = document.getElementById('ff').files[0];
     	var canvas = document.getElementById("canvas");
+        var canvas0=document.getElementById("canvas0");
     	if (canvas.getContext) {
     	var ctx = canvas.getContext("2d");
+        var ctx0 = canvas0.getContext("2d");
     	var read=new FileReader;
     	var img=new Image();
     	var tans=0;
@@ -47,44 +58,53 @@
     	var iw=0,ih=0;
     	img.onload=function()
     	{
-    		ctx.fillStyle="#FFFFFF";
+    		ctx.fillStyle="#FFFFFF";           //清除舊圖片
     		ctx.fillRect(0,0,cans,cans);
-    		if(img.width>=img.height)
+            ctx0.fillStyle="#FFFFFF";        
+            ctx0.fillRect(0,0,cans,cans);
+    		if(img.width>=img.height)         //統一圖片大小
     		{
     			ctx.scale(cans/img.width,cans/img.width);
+                ctx0.scale(cans/img.width,cans/img.width);
     			ck=cans*(cans/img.width)*img.height;
     			iw=cans;
     			ih=parseInt((cans/img.width)*img.height);
     			ctx.drawImage(img,0,0);
     			ctx.scale(img.width/cans,img.width/cans);
+                ctx0.drawImage(img,0,0);
+                ctx0.scale(img.width/cans,img.width/cans);
     		}else{
     			ctx.scale(cans/img.height,cans/img.height);
+                ctx0.scale(cans/img.height,cans/img.height);
     			ck=cans*(cans/img.height)*img.width;
     			iw=parseInt((cans/img.height)*img.width);
     			ih=cans;
     			ctx.drawImage(img,0,0);
     			ctx.scale(img.height/cans,img.height/cans);
+                ctx0.drawImage(img,0,0);
+                ctx0.scale(img.height/cans,img.height/cans);
     		}
 
     		var imd=ctx.getImageData(0,0,iw,ih);
     		//alert((imd.data.length/4)/600);
     		for (var i=0;i<imd.data.length;i+=4)
   			{
-  				var r=imd.data[i];
+  				var r=imd.data[i];                            //灰階化
   				var g=imd.data[i+1];
   				var b=imd.data[i+2];
   				gr[i]=parseInt(r*30+g*59+b*11+50)/100;
   				imd.data[i]=gr[i];
   				imd.data[i+1]=gr[i];
   				imd.data[i+2]=gr[i];
-  				pp[gr[i]]++;
+  				pp[gr[i]]++;                                  //統計顏色分布 Otsu會用到
  			 }
+             ctx0.putImageData(imd,0,0);
  			 for(var i=0;i<=255;i++)
  			 {
- 			 	pp[i]=pp[i]/ck;
+ 			 	pp[i]=pp[i]/ck;                               //換成百分比
  			 }
  			 var u1=0,u2=0,o1=0,o2=0;
- 			 for(var i=0;i<=255;i++)
+ 			 for(var i=0;i<=255;i++)                          //利用Otsu算出閥值
  			 {
             u1 = uu(0, i);
             u2 = uu(i + 1, 255);
@@ -103,7 +123,7 @@
         	//tans=150;
         
 iw=parseInt(iw*4);
-        	for (var i=0;i<imd.data.length;i+=4)
+        	for (var i=0;i<imd.data.length;i+=4)       //sobel邊緣偵測
   			{
   				try
   				{

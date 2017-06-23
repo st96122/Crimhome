@@ -6,14 +6,24 @@
 <meta charset="utf-8">
     <style>
     html,body { height: 90%; }
+    body{
+			background-image: url('pw9.jpg');
+			background-attachment:fixed;
+			background-repeat:no-repeat;
+			background-size:cover;
+		}
     </style>
-	<title></title>
+	<title>留言板</title>
 </head>
 <body scrolling="no" onload="document.getElementById('mess').focus();scrollWindow();">
 <iframe name="ifra" id="ifra" src="list.php" width="100%" height="70%" frameborder="0" scrolling="auto" onload="scrollWindow();updd();"></iframe>
 	
 <?php
 	if ($_SESSION["user"]=="Crim") {
+	echo '<script>function D()
+	{
+		window.location.href="d.php";
+	};</script>';
 	echo "<input type='button' value='清除留言' onclick='D()'>";}
 	
 if($_SESSION["user"]=="")
@@ -22,7 +32,8 @@ if($_SESSION["user"]=="")
 	die();
 }else{
 ?>
-<a href="logout.php">登出</a>
+<input type="button" onclick="window.location.href='logout.php';" value="登出">
+<input type="button" onclick="window.location.href='index.php';" value="回首頁">
 <!--<form method="post" action="c.php">!-->
 	<div>
 	ID：<?php echo $_SESSION["user"]; ?> 留言：<input name="mes" type="text" id="mess" onkeydown="keyu(event);"><!--<input type="submit" onsubmit="document.all('ifra').contentWindow.di('1');" value="送出">!--><input type="button" id="btn" value="送出" onclick="subm();">
@@ -49,10 +60,7 @@ k=Y+M+D+h+m+s;
 //document.write(k);
 return k;
 };
-	function D()
-	{
-		window.location.href="d.php";
-	};
+	
 	var h=2000;
 	function scrollWindow()
   {
